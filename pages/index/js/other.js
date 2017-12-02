@@ -1,0 +1,1 @@
+export const oi = (name) => console.log(`hello ${name}`)

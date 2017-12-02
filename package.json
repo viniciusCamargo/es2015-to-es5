@@ -1,0 +1,29 @@
+{
+  "name": "html-es2015-boilerplate",
+  "version": "2.0.0",
+  "description": "A simple to use boiler plate for HTML and >ES2015 apps that maps the file system to pages",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack-dev-server",
+    "build": "webpack -p"
+  },
+  "keywords": ["html", "simple", "es2015", "boilerplate"],
+  "author": {
+    "name": "Vinicius Camargo",
+    "email": "cmrg.vinicius@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viniciusCamargo/es2015-to-es5"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "html-webpack-plugin": "^2.30.1",
+    "node-dir": "^0.1.17",
+    "webpack": "^3.9.1",
+    "webpack-dev-server": "^2.9.5"
+  }
+}
