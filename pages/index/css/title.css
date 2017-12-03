@@ -1,0 +1,9 @@
+* { font-family: sans-serif; }
+h1 {
+  color: #2278c7;
+  margin: 2em;
+}
+a {
+  color: white;
+  text-decoration: none;
+}

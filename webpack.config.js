@@ -1,20 +1,20 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const dir = require('node-dir')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const glob = require('glob')
 
-const pages = dir.subdirs('./pages', (err, paths) => {
-  if (err) throw err
+const pages = glob.sync('./pages/*').map(i => i.replace('./pages/', ''))
 
-  return paths
-}, 'dir', { sync: true, shortName: true, recursive: false })
+const js = glob.sync('./pages/*/js/index.js')
+  .reduce((entries, path, i) => {
+    const page = pages[i]
+    entries[page] = path
 
-const entries = pages.reduce((obj, entry) => {
-  obj[entry] = `./pages/${entry}/js/index.js`
+    return entries
+  }, {})
 
-  return obj
-}, {})
 
-const htmlPages = pages.reduce((arr, page) => {
+const html = pages.reduce((arr, page) => {
   const html = {
     template: `./pages/${page}/index.html`,
     chunks: [`${page}`],
@@ -24,14 +24,26 @@ const htmlPages = pages.reduce((arr, page) => {
   return arr.concat(new HtmlWebpackPlugin(html))
 }, [])
 
+const rules = [
+  { test: /\.js$/, exclude: /node_modules/, use: {
+    loader: 'babel-loader',
+    options: { presets: ['es2015'] }
+  } },
+  { test: /\.css$/, use: ExtractTextPlugin.extract({
+    fallback: 'style-loader',
+    use: { loader: 'css-loader', options: { minimize: true } }
+  }) },
+  { test: /\.(png|svg|jpg|gif)$/, use: ['file-loader'] },
+  { test: /\.(woff|woff2|eot|ttf|otf)$/, use: ['file-loader'] }
+]
+
 module.exports = {
-  entry: entries,
-  plugins: [...htmlPages],
-  module: {
-    rules: [
-      { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }
-    ]
-  },
+  entry: { ...js },
+  module: { rules },
+  plugins: [
+    ...html,
+    new ExtractTextPlugin('css/[name].css')
+  ],
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: 'js/[name].js'
